@@ -1,4 +1,4 @@
-import { DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -16,3 +16,6 @@ export const typeOrmConfig: DataSourceOptions = {
   migrations: [__dirname + '/../migrations/*.{js,ts}'],
   logging: true,
 };
+
+// THIS is what TypeORM CLI expects:
+export default new DataSource(typeOrmConfig);
