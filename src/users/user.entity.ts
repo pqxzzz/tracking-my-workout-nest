@@ -22,6 +22,12 @@ export class User {
   @Column({ default: false })
   isEmailConfirmed: boolean;
 
+  @Column({ nullable: true })
+  confirmationToken: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  confirmationTokenExpiredAt: Date | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -1,8 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { hashPassword } from '../common/helpers/hash.helper';
+import { v4 as uuidv4 } from 'uuid';
+import { SendGridService } from '../common/providers/sendgrid/sendgrid.service';
 
 @Injectable()
 export class UsersService {
@@ -16,12 +22,95 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepo: Repository<User>,
+    private sendGridService: SendGridService,
   ) {}
 
   async create(email: string, plainPassword: string): Promise<User> {
-    const hashed = await hashPassword(plainPassword);
-    const user = this.usersRepo.create({ email, password: hashed });
-    return this.usersRepo.save(user);
+    // 1. generate token and expiration date
+    const token = uuidv4(); // create token
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24h
+
+    // 2. create user with confirmation fields and hash password
+    const user = this.usersRepo.create({
+      //create user
+      email,
+      password: await hashPassword(plainPassword),
+      confirmationToken: token,
+      confirmationTokenExpiredAt: expires,
+    });
+
+    // 3. save user
+    await this.usersRepo.save(user);
+
+    // 4. send confirmation email
+    await this.sendGridService.sendAccountConfirmationEmail(
+      email,
+      token,
+      'NOME DO USUARIO',
+    );
+
+    return user;
+  }
+
+  async confirmEmail(token: string): Promise<User> {
+    if (!token) throw new BadRequestException('Token is required');
+
+    // 1. Find user by token
+    const user = await this.usersRepo.findOne({
+      where: {
+        confirmationToken: token,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    // 2. Check if the token is expired
+    if (
+      !user.confirmationTokenExpiredAt ||
+      user.confirmationTokenExpiredAt < new Date()
+    ) {
+      throw new BadRequestException('Token expired');
+    }
+
+    // 3. Mark email as confirmed and clear token fields
+    user.isEmailConfirmed = true;
+    user.confirmationToken = '';
+    user.confirmationTokenExpiredAt = null;
+
+    // 4. Save user
+    await this.usersRepo.save(user);
+
+    return user;
+  }
+
+  async resendConfirmationEmail(email: string): Promise<void> {
+    const user = await this.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.isEmailConfirmed) {
+      throw new BadRequestException('Email already confirmed');
+    }
+
+    // 1. generate token and expiration date
+    const token = uuidv4();
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    // 2. update user with new token and expiration date
+    user.confirmationToken = token;
+    user.confirmationTokenExpiredAt = expires;
+
+    // 3. save user
+    await this.usersRepo.save(user);
+
+    // 4. send confirmation email
+    await this.sendGridService.sendAccountConfirmationEmail(
+      email,
+      token,
+      'NOME DO USUARIO - RESEND',
+    );
   }
 
   async findByEmail(email: string): Promise<User | null> {
