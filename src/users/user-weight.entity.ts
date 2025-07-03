@@ -17,9 +17,6 @@ export class UserWeight {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @Column()
-  UserId: string;
-
   @Column({ type: 'date' })
   date: Date;
 
