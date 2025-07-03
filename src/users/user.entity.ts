@@ -13,6 +13,15 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ nullable: true })
+  username: string;
+
+  @Column({ type: 'date', nullable: true })
+  birthDate: Date;
+
+  @Column({ type: 'int', nullable: true })
+  height: number;
+
   @Column({ unique: true })
   email: string;
 
