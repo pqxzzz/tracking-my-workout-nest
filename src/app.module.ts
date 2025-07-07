@@ -6,9 +6,11 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
+import { ExercisesModule } from './exercises/exercises.module';
+import { MusclesModule } from './muscles/muscles.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule],
+  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, ExercisesModule, MusclesModule],
   controllers: [AppController],
   providers: [AppService],
 })
