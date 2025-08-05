@@ -9,6 +9,8 @@ import { User } from './user.entity';
 import { hashPassword } from '../common/helpers/hash.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { SendGridService } from '../common/providers/sendgrid/sendgrid.service';
+import { AuthService } from 'src/auth/auth.service';
+import { FinishRegistrationDto } from './dtos/finish-registration.dto';
 
 @Injectable()
 export class UsersService {
@@ -23,6 +25,7 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepo: Repository<User>,
     private sendGridService: SendGridService,
+    private authService: AuthService,
   ) {}
 
   async create(email: string, plainPassword: string): Promise<User> {
@@ -113,7 +116,29 @@ export class UsersService {
     );
   }
 
+  async finishAccRegistration(body: FinishRegistrationDto, userId: string) {
+    if (!userId) {
+      throw new Error('User ID is required to update user data.');
+    }
+
+    await this.usersRepo.update(userId, {
+      username: body.username,
+      height: body.height,
+      birthDate: body.birthDate,
+    });
+
+    return this.usersRepo.findOne({ where: { id: userId } });
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepo.findOne({ where: { email } });
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return this.usersRepo.findOne({ where: { id } });
+  }
+
+  async findUserByAccessToken(token: string) {
+    return this.authService.getUserFromToken(token);
   }
 }

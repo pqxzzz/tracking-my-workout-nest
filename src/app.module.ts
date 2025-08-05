@@ -8,10 +8,21 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { ExercisesModule } from './exercises/exercises.module';
 import { MusclesModule } from './muscles/muscles.module';
+import { WorkoutsetsController } from './workoutSets/workoutsets.controller';
+import { WorkoutSetsModule } from './workoutSets/workoutsets.module';
+import { WorkoutsModule } from './workouts/workouts.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeOrmConfig), UsersModule, AuthModule, ExercisesModule, MusclesModule],
-  controllers: [AppController],
+  imports: [
+    TypeOrmModule.forRoot(typeOrmConfig),
+    UsersModule,
+    AuthModule,
+    ExercisesModule,
+    MusclesModule,
+    WorkoutSetsModule,
+    WorkoutsModule,
+  ],
+  controllers: [AppController, WorkoutsetsController],
   providers: [AppService],
 })
 // export class AppModule implements NestModule { // TODO: Continue on apply middleware
