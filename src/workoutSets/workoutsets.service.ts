@@ -38,7 +38,7 @@ export class WorkoutsetsService {
     logger.log(user);
 
     if (!user) {
-      throw new NotFoundException('User not found!', userId);
+      throw new NotFoundException('User not found!');
     }
 
     user.activeWorkoutSetId = workoutSet.id;

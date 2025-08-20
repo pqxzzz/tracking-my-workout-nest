@@ -1,3 +1,4 @@
+import { Weight } from 'src/weight/entities/weight.entity';
 import { Workoutset } from 'src/workoutSets/entities/workoutset.entity';
 import {
   Entity,
@@ -43,6 +44,9 @@ export class User {
 
   @OneToMany(() => Workoutset, (workoutSet) => workoutSet.user)
   workoutSets: Workoutset[];
+
+  @OneToMany(() => Weight, (weight) => weight.user)
+  weights: Weight[];
 
   @OneToOne(() => Workoutset, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'activeWorkoutSetId' })

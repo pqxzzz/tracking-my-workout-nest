@@ -11,6 +11,7 @@ import { MusclesModule } from './muscles/muscles.module';
 import { WorkoutsetsController } from './workoutSets/workoutsets.controller';
 import { WorkoutSetsModule } from './workoutSets/workoutsets.module';
 import { WorkoutsModule } from './workouts/workouts.module';
+import { WeightModule } from './weight/weight.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { WorkoutsModule } from './workouts/workouts.module';
     MusclesModule,
     WorkoutSetsModule,
     WorkoutsModule,
+    WeightModule,
   ],
   controllers: [AppController],
   providers: [AppService],
