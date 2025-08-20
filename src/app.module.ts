@@ -22,7 +22,7 @@ import { WorkoutsModule } from './workouts/workouts.module';
     WorkoutSetsModule,
     WorkoutsModule,
   ],
-  controllers: [AppController, WorkoutsetsController],
+  controllers: [AppController],
   providers: [AppService],
 })
 // export class AppModule implements NestModule { // TODO: Continue on apply middleware

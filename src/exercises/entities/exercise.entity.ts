@@ -2,11 +2,13 @@ import { Muscle } from 'src/muscles/entities/muscle.entity';
 import { Workout } from 'src/workouts/entities/workout.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('exercises')
@@ -17,8 +19,17 @@ export class Exercise {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  information: string;
+
   @Column()
-  description: string;
+  series: number;
+
+  @Column()
+  repetitions: number;
+
+  @Column()
+  weight: string;
 
   @Column({ nullable: true })
   muscleGroup: string;
@@ -38,4 +49,12 @@ export class Exercise {
   @ManyToMany(() => Muscle, (muscle) => muscle.exercises)
   @JoinTable()
   muscles: Muscle[];
+
+  // DATA DE CRIAÇÃO
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  // DATA DE ATUALIZAÇÃO
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

@@ -1,8 +1,10 @@
+import { User } from 'src/users/user.entity';
 import { Workout } from 'src/workouts/entities/workout.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,6 +24,12 @@ export class Workoutset {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Workout, (workout) => workout.workoutSet)
+  @ManyToOne(() => User, (user) => user.workoutSets, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  user: User;
+
+  @OneToMany(() => Workout, (workout) => workout.workoutSet, { cascade: true })
   workouts: Workout[];
 }

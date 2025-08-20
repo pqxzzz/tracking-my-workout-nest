@@ -1,9 +1,13 @@
+import { Workoutset } from 'src/workoutSets/entities/workoutset.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 
 // isso é um entity, é uma classe que representa uma tabela no banco de dados
@@ -36,6 +40,16 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   confirmationTokenExpiredAt: Date | null;
+
+  @OneToMany(() => Workoutset, (workoutSet) => workoutSet.user)
+  workoutSets: Workoutset[];
+
+  @OneToOne(() => Workoutset, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'activeWorkoutSetId' })
+  activeWorkoutSet: Workoutset;
+
+  @Column({ nullable: true, unique: true })
+  activeWorkoutSetId: string;
 
   @CreateDateColumn()
   createdAt: Date;

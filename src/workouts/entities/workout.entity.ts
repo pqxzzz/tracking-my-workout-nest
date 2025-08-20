@@ -23,6 +23,6 @@ export class Workout {
   @ManyToOne(() => Workoutset, (workoutSet) => workoutSet.workouts)
   workoutSet: Workoutset;
 
-  @OneToMany(() => Exercise, (exercise) => exercise.workout)
-  exercises: Exercise;
+  @OneToMany(() => Exercise, (exercise) => exercise.workout, { cascade: true })
+  exercises: Exercise[];
 }

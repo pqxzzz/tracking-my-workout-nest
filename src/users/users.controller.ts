@@ -81,4 +81,13 @@ export class UsersController {
     const user = await this.usersService.findById(userId);
     return user;
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get('activeWorkoutSet')
+  // async getActiveWorkoutSet(@Request() req){
+  //   const userId = req.user.sub;
+
+  //  const active await this.usersService.
+
+  // }
 }
