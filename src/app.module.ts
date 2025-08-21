@@ -12,6 +12,7 @@ import { WorkoutsetsController } from './workoutSets/workoutsets.controller';
 import { WorkoutSetsModule } from './workoutSets/workoutsets.module';
 import { WorkoutsModule } from './workouts/workouts.module';
 import { WeightModule } from './weight/weight.module';
+import { WorkoutLogModule } from './workout-log/workout-log.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { WeightModule } from './weight/weight.module';
     WorkoutSetsModule,
     WorkoutsModule,
     WeightModule,
+    WorkoutLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

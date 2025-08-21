@@ -1,8 +1,14 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateWeightDto } from './dto/create-weight.dto';
 import { UpdateWeightDto } from './dto/update-weight.dto';
 import { Weight } from './entities/weight.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 
@@ -24,12 +30,33 @@ export class WeightService {
       throw new NotFoundException('User not found!');
     }
 
-    const weight = this.weightRepo.create({
-      ...createWeightDto,
-      user,
-    });
+    // Start and end of current day
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
 
-    return this.weightRepo.save(weight);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    // ---
+
+    const isWeightRegisterToday = await this.weightRepo.findOne({
+      where: {
+        user: { id: userId },
+        createdAt: Between(startOfDay, endOfDay),
+      },
+    });
+    if (isWeightRegisterToday) {
+      throw new HttpException(
+        'User already already registered a weight today!',
+        HttpStatus.CONFLICT, // 409
+      );
+    } else {
+      const weight = this.weightRepo.create({
+        ...createWeightDto,
+        user,
+      });
+
+      return this.weightRepo.save(weight);
+    }
   }
 
   findAll() {
