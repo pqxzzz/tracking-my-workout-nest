@@ -8,6 +8,8 @@ import {
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { User } from 'src/users/user.entity';
+import { UserResponseDto } from 'src/users/dtos/user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,12 +46,21 @@ export class AuthService {
       email: user.email,
     };
 
-    // console.log(user);
-    Logger.log(user);
+    const userResponse = {
+      username: user.username,
+      birthDate: user.birthDate,
+      height: user.height,
+      email: user.email,
+      isEmailConfirmed: user.isEmailConfirmed,
+      activeWorkoutSetId: user.activeWorkoutSetId,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      // id e password não incluídos
+    };
 
     return {
-      user: user,
-      access_token: this.jwtService.sign(payload, { expiresIn: '10h' }),
+      user: userResponse,
+      access_token: this.jwtService.sign(payload, { expiresIn: '72h' }),
     };
   }
 

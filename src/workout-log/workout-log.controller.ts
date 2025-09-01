@@ -21,7 +21,7 @@ export class WorkoutLogController {
   constructor(private readonly workoutLogService: WorkoutLogService) {}
 
   @Post()
-  create(@Body() workoutId: string, @Request() req) {
+  create(@Body('workoutId') workoutId: string, @Request() req) {
     const userId = req.user.sub;
 
     return this.workoutLogService.create(workoutId, userId);

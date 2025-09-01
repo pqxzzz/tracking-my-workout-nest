@@ -53,9 +53,9 @@ export class WorkoutLogService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} workoutLog`;
-  }
+  // findOne(id: number) {
+  //   const workout = await this.workout
+  // }
 
   update(id: number, updateWorkoutLogDto: UpdateWorkoutLogDto) {
     return `This action updates a #${id} workoutLog`;
@@ -69,9 +69,12 @@ export class WorkoutLogService {
     userId: string,
     page: number = 1,
     limit: number = 20,
+    // beginDate?: string,
+    // endDate?: string
   ) {
     const [logs, total] = await this.workoutLogRepo.findAndCount({
       where: { userId: userId },
+      relations: ['workout'],
       order: { date: 'DESC' },
       skip: (page - 1) * limit,
       take: limit,

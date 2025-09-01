@@ -1,7 +1,10 @@
+import { Workout } from 'src/workouts/entities/workout.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -18,4 +21,8 @@ export class WorkoutLog {
 
   @CreateDateColumn()
   date: Date;
+
+  @ManyToOne(() => Workout)
+  @JoinColumn({ name: 'workoutId' })
+  workout: Workout;
 }

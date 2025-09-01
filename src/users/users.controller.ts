@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Headers,
@@ -9,6 +10,7 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
@@ -19,6 +21,8 @@ import {
 import { FinishRegistrationDto } from './dtos/finish-registration.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { User } from './user.entity';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from './dtos/user-response.dto';
 
 @Controller('users')
 export class UsersController {
@@ -66,28 +70,15 @@ export class UsersController {
     };
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseGuards(JwtAuthGuard)
   @Get('me')
   async getMe(@Request() req) {
-    // async getMe(@Headers('authorization') authHeader: string) {
-    // O header normalmente vem como: "Bearer <token>"
-    // TODO: ver isso aqui
-    // const token = authHeader?.split(' ')[1];
-    // const user = await this.usersService.findUserByAccessToken(token);
-    // return user;
-
-    // PARA BUSCAR TODOS DADOS DO USER
     const userId = req.user.sub;
     const user = await this.usersService.findById(userId);
-    return user;
+
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get('activeWorkoutSet')
-  // async getActiveWorkoutSet(@Request() req){
-  //   const userId = req.user.sub;
-
-  //  const active await this.usersService.
-
-  // }
 }

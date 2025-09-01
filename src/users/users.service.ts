@@ -11,6 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { SendGridService } from '../common/providers/sendgrid/sendgrid.service';
 import { AuthService } from 'src/auth/auth.service';
 import { FinishRegistrationDto } from './dtos/finish-registration.dto';
+import { UserResponseDto } from './dtos/user-response.dto';
+import { instanceToPlain, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -138,7 +140,13 @@ export class UsersService {
     return this.usersRepo.findOne({ where: { id } });
   }
 
-  async findUserByAccessToken(token: string) {
-    return this.authService.getUserFromToken(token);
+  async findUserByAccessToken(token: string): Promise<UserResponseDto> {
+    const user = await this.authService.getUserFromToken(token);
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
+
+    return user;
   }
 }
