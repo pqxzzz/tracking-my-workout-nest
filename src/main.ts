@@ -10,7 +10,7 @@ async function bootstrap() {
   const dataSource = new DataSource(typeOrmConfig);
 
   app.enableCors({
-    origin: 'http://localhost:3001', // ou "*", se estiver testando
+    origin: ['http://localhost:3001', 'http://3.250.68.82:3000'], // qnd configurar NGINX, trocar para dominio.
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     credentials: true,
   });
