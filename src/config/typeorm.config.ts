@@ -8,6 +8,9 @@ export const typeOrmConfig: DataSourceOptions = {
   url: process.env.DATABASE_URL,
   entities: [__dirname + '/../**/*.entity.{js,ts}'],
   synchronize: false,
+  ssl: {
+	  rejectUnauthorized: false,
+  },
   migrationsRun: true,
   migrations: [__dirname + '/../migrations/*.{js,ts}'],
   logging: true,
