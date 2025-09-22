@@ -8,8 +8,6 @@ import {
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/users/user.entity';
-import { UserResponseDto } from 'src/users/dtos/user-response.dto';
 
 @Injectable()
 export class AuthService {

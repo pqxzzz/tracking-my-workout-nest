@@ -85,7 +85,8 @@ export class WorkoutsetsService {
     //   return this.workoutSetsRepo.save(workoutSet);
   }
 
-  async getWorkoutSet(userId: string): Promise<Workoutset> {
+  async getWorkoutSet(userId: string): Promise<Workoutset | null> {
+    console.log('USERID: ', userId);
     const user = await this.userRepo.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -98,7 +99,7 @@ export class WorkoutsetsService {
     });
 
     if (!workoutSet) {
-      throw new NotFoundException('WorkoutSet not found!');
+      return null;
     }
 
     return workoutSet;

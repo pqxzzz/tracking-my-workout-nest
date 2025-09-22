@@ -34,6 +34,7 @@ export class WorkoutsetsController {
   @UseGuards(JwtAuthGuard)
   @Get('/ActiveWorkoutSet')
   async getActiveWorkoutSet(@Request() req) {
+    console.log('REQ: ', req.user);
     const userId = req.user.sub;
 
     const workoutSetInfo = await this.workoutsetsService.getWorkoutSet(userId);

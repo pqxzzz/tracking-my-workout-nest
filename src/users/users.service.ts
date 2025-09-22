@@ -31,6 +31,7 @@ export class UsersService {
   ) {}
 
   async create(email: string, plainPassword: string): Promise<User> {
+    console.log('creating account!!!');
     // 1. generate token and expiration date
     const token = uuidv4(); // create token
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24h
