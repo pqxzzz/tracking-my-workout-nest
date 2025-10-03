@@ -13,6 +13,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { FinishRegistrationDto } from './dtos/finish-registration.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
+import { ResendService } from 'src/common/providers/resend/resend.service';
 
 @Injectable()
 export class UsersService {
@@ -26,15 +27,20 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepo: Repository<User>,
-    private sendGridService: SendGridService,
+    // private sendGridService: SendGridService,
+    private resendService: ResendService,
     private authService: AuthService,
   ) {}
 
   async create(email: string, plainPassword: string): Promise<User> {
-    console.log('creating account!!!');
     // 1. generate token and expiration date
     const token = uuidv4(); // create token
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); //24h
+
+    const existingUser = await this.findByEmail(email);
+    if (existingUser) {
+      throw new BadRequestException('Email already in use');
+    }
 
     // 2. create user with confirmation fields and hash password
     const user = this.usersRepo.create({
@@ -46,13 +52,14 @@ export class UsersService {
     });
 
     // 3. save user
+    // TODO: cria o user e DEPOIS manda o email
     await this.usersRepo.save(user);
 
     // 4. send confirmation email
-    await this.sendGridService.sendAccountConfirmationEmail(
+    await this.resendService.sendAccountConfirmationEmail(
       email,
       token,
-      'NOME DO USUARIO',
+      'New User', // TODO: replace with actual user name
     );
 
     return user;
@@ -112,10 +119,10 @@ export class UsersService {
     await this.usersRepo.save(user);
 
     // 4. send confirmation email
-    await this.sendGridService.sendAccountConfirmationEmail(
+    await this.resendService.sendAccountConfirmationEmail(
       email,
       token,
-      'NOME DO USUARIO - RESEND',
+      'User', // TODO: replace with actual user name
     );
   }
 

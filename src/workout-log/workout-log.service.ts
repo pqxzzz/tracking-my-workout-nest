@@ -14,8 +14,6 @@ export class WorkoutLogService {
   private readonly logger = new Logger(WorkoutLogService.name);
 
   async create(workoutId: string, userId: string) {
-    this.logger.log(`🚨 CRIANDO UM NOVO WORKOUTLOG: ${workoutId} - ${userId}`);
-
     // Start and end of current day
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);

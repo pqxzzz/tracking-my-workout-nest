@@ -31,70 +31,34 @@ export class WorkoutsetsService {
 
     // atualizar o workoutsetActive do user
     const logger = new Logger(userId);
-    logger.log('CREATING NEW WORKOUTSET: ', userId);
+
+    const savedWorkoutSet = await this.workoutSetsRepo.save(workoutSet);
 
     const user = await this.userRepo.findOne({ where: { id: userId } });
-
-    logger.log(user);
 
     if (!user) {
       throw new NotFoundException('User not found!');
     }
 
-    user.activeWorkoutSetId = workoutSet.id;
-
+    user.activeWorkoutSetId = savedWorkoutSet.id;
     await this.userRepo.save(user);
 
-    logger.warn(user);
-
-    return this.workoutSetsRepo.save(workoutSet); // salva tudo com cascade!
-
-    //   const workoutSet = this.workoutSetsRepo.create({
-    //     name: body.name,
-    //     user: { id: userId },
-    //   });
-
-    //   const workouts: Workout[] = [];
-
-    //   for (const workoutDto of body.workouts) {
-    //     const workout = this.workoutsRepo.create({
-    //       name: workoutDto.name,
-    //       workoutSet, // relação inversa
-    //     });
-
-    //     const exercises = workoutDto.exercises.map((exDto) =>
-    //       this.exercisesRepo.create({
-    //         // name: exDto.name,
-    //         // series: exDto.series,
-    //         // repetitions: exDto.repetitions,
-    //         // weight: exDto.weight,
-    //         // information: exDto.information,
-    //         // muscleGroup: exDto.muscleGroup,
-    //         // workout, // relação inversa
-
-    //         ...exDto,
-    //         workout, // <- isso precisa estar aqui e ser válido
-    //       }),
-    //     );
-
-    //     workout.exercises = await this.exercisesRepo.save(exercises);
-    //     workouts.push(workout);
-    //   }
-
-    //   workoutSet.workouts = await this.workoutsRepo.save(workouts);
-    //   return this.workoutSetsRepo.save(workoutSet);
+    return savedWorkoutSet;
   }
 
   async getWorkoutSet(userId: string): Promise<Workoutset | null> {
-    console.log('USERID: ', userId);
     const user = await this.userRepo.findOne({ where: { id: userId } });
 
     if (!user) {
       throw new NotFoundException('USER NOT FOUND!');
     }
 
+    if (!user.activeWorkoutSetId) {
+      return null;
+    }
+
     const workoutSet = await this.workoutSetsRepo.findOne({
-      where: { id: user?.activeWorkoutSetId },
+      where: { id: user.activeWorkoutSetId },
       relations: ['workouts', 'workouts.exercises'],
     });
 

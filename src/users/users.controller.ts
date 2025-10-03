@@ -59,7 +59,6 @@ export class UsersController {
     @Body() body: FinishRegistrationDto,
     @Request() req,
   ) {
-    Logger.log('REQUISICAO---->', req.user);
     const updatedUser = await this.usersService.finishAccRegistration(
       body,
       req.user.sub,
