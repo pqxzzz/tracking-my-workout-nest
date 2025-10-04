@@ -60,6 +60,14 @@ export class WorkoutsetsService {
     const workoutSet = await this.workoutSetsRepo.findOne({
       where: { id: user.activeWorkoutSetId },
       relations: ['workouts', 'workouts.exercises'],
+      order: {
+        workouts: {
+          createdAt: 'ASC',
+          exercises: {
+            id: 'ASC', // TODO: se eu quiser ordenar preciso criar uma coluna order
+          },
+        },
+      },
     });
 
     if (!workoutSet) {

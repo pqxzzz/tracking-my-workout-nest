@@ -131,8 +131,6 @@ export class UsersService {
       throw new Error('User ID is required to update user data.');
     }
 
-    console.log('user info updated: ', body);
-
     await this.usersRepo.update(userId, {
       username: body.username,
       height: body.height,
