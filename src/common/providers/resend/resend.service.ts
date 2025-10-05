@@ -44,7 +44,7 @@ export class ResendService {
     // TODO: adicionar meu dominino verificado
 
     const { data, error } = await resend.emails.send({
-      from: 'Tracking My Workout <onboarding@resend.dev>',
+      from: 'Tracking My Workout <welcome@trackingmyworkout.com>',
       to: [to],
       subject,
       html,
@@ -73,8 +73,8 @@ export class ResendService {
     });
 
     await this.sendEmail(
-      // email,
-      'pericles.code@gmail.com', // TODO: remover depois dos testes
+      email,
+      // 'pericles.code@gmail.com', // TODO: remover depois dos testes
       'Tracking My Workout - Confirm your email',
       html,
     );
