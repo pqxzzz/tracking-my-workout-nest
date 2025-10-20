@@ -64,10 +64,11 @@ export class SendGridService {
     for (const path of possiblePaths) {
       try {
         html = readFileSync(path, 'utf8');
-        templatePath = path;
+
         this.logger.log(`Email template found at: ${path}`);
         break;
-      } catch (error) {
+      } catch (err) {
+        this.logger.debug(err);
         this.logger.debug(`Template not found at: ${path}`);
         // Continue to next path if this one doesn't exist
         continue;

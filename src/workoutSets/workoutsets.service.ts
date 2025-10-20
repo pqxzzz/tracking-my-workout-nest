@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workoutset } from './entities/workoutset.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -28,9 +28,6 @@ export class WorkoutsetsService {
       ...body,
       user: { id: userId },
     }); // o body já tem tudo
-
-    // atualizar o workoutsetActive do user
-    const logger = new Logger(userId);
 
     const savedWorkoutSet = await this.workoutSetsRepo.save(workoutSet);
 

@@ -1,11 +1,5 @@
 import { Exercise } from 'src/exercises/entities/exercise.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('muscles')
 export class Muscle {
