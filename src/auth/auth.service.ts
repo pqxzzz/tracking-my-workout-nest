@@ -2,12 +2,12 @@ import {
   forwardRef,
   Inject,
   Injectable,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
     return user;
   }
 
-  async login(user: any) {
+  login(user: User) {
     // TODO: type user
     const payload = {
       sub: user.id,
@@ -67,7 +67,7 @@ export class AuthService {
       const payload = this.jwtService.verify(token);
       return this.usersService.findByEmail(payload.email);
     } catch (e) {
-      throw new UnauthorizedException('Invalid Token');
+      throw new UnauthorizedException('Invalid Token', e.message);
     }
   }
 }

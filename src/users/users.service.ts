@@ -8,11 +8,9 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { hashPassword } from '../common/helpers/hash.helper';
 import { v4 as uuidv4 } from 'uuid';
-import { SendGridService } from '../common/providers/sendgrid/sendgrid.service';
 import { AuthService } from 'src/auth/auth.service';
 import { FinishRegistrationDto } from './dtos/finish-registration.dto';
 import { UserResponseDto } from './dtos/user-response.dto';
-import { instanceToPlain, plainToInstance } from 'class-transformer';
 import { ResendService } from 'src/common/providers/resend/resend.service';
 
 @Injectable()
