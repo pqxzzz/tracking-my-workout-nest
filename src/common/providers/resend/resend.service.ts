@@ -40,8 +40,6 @@ export class ResendService {
 
   async sendEmail(to: string, subject: string, html: string) {
     const resend = new Resend(process.env.RESEND_API_KEY);
-    // const sender = process.env.RESEND_SENDER;
-    // TODO: adicionar meu dominino verificado
 
     const { data, error } = await resend.emails.send({
       from: 'Tracking My Workout <welcome@trackingmyworkout.com>',
