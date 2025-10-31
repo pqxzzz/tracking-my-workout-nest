@@ -141,6 +141,24 @@ export class UsersService {
   async findByEmail(email: string): Promise<User | null> {
     return this.usersRepo.findOne({ where: { email } });
   }
+  // Google OAuth method
+  async findOrCreateByGooel(email: string, displayName: string): Promise<User> {
+    let user = await this.findByEmail(email);
+
+    if (user) {
+      return user;
+    }
+
+    user = this.usersRepo.create({
+      email,
+      username: displayName,
+      isEmailConfirmed: true,
+      password: '', // No password for Google OAuth users
+    });
+
+    await this.usersRepo.save(user);
+    return user;
+  }
 
   async findById(id: string): Promise<User | null> {
     return this.usersRepo.findOne({ where: { id } });
